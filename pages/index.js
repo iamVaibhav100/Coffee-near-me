@@ -3,9 +3,17 @@ import Image from "next/image";
 import Banner from "../components/Banner";
 import styles from "../styles/Home.module.css";
 import Card from "../components/Card";
-import coffeeStores from "../data/coffee-stores";
+import coffeeStoresData from "../data/coffee-stores";
 
-export default function Home() {
+export async function getStaticProps() {
+  return {
+    props: {
+      coffeeStores: coffeeStoresData,
+    },
+  };
+}
+
+export default function Home(props) {
   const bannerBtnClick = () => {
     console.log("Hi!");
   };
@@ -27,19 +35,24 @@ export default function Home() {
             height={300}
           />
         </div>
-        <div className={styles.cardLayout}>
-          {coffeeStores.map((store) => {
-            return (
-              <Card
-                key={store.id}
-                name={store.name}
-                imgUrl={store.imgUrl}
-                href={`coffee-store/${store.id}`}
-                className={styles.card}
-              />
-            );
-          })}
-        </div>
+        {props.coffeeStores.length > 0 && (
+          <>
+            <h2 className={styles.heading2}>Toronto</h2>
+            <div className={styles.cardLayout}>
+              {props.coffeeStores.map((store) => {
+                return (
+                  <Card
+                    key={store.id}
+                    name={store.name}
+                    imgUrl={store.imgUrl}
+                    href={`coffee-store/${store.id}`}
+                    className={styles.card}
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
